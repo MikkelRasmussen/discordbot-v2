@@ -1,11 +1,16 @@
 const moveerMessage = require('../moveerMessage.js')
-const config = require('../config.js')
+/*const config = require('../config.js')
 
 async function connectToDb(message) {
   try {
     const { Client } = require('pg')
     const client = new Client({
-      connectionString: config.postgreSQLConnection,
+      //connectionString: config.postgreSQLConnection,
+      host: "localhost",
+      port: "5452",
+      user: "postgres",
+      password: "test",
+      database: "guilds"
     })
     await client.connect()
     return client

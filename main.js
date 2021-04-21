@@ -17,7 +17,7 @@ const { handleCommand } = require('./commandHandler.js')
 // rabbitMQ
 const rabbitMQConnection = process.env.rabbitMQConnection || config.rabbitMQConnection
 let rabbitMqChannel
-
+/*
 if (config.discordBotListToken !== 'x') {
   // Only run if bot is public at discordbotlist.com
   const DBL = require('dblapi.js')
@@ -31,16 +31,16 @@ if (config.discordBotListToken !== 'x') {
         )
       })
       .catch(console.error)
-  })
+  }) 
 
   dbl.on('error', (e) => {
     log.warn(`DBL Error!:  ${e}`)
   })
-}
+}*/
 
-client.on('ready', async () => {
+///client.on('ready', async () => {
   log.info('Startup successful.')
-  log.info('Running as user: ' + client.user.username + ' ShardID: (' + client.shard.ids + ')')
+ // log.info('Running as user: ' + client.user.username + ' ShardID: (' + client.shard.ids + ')')
   amqp.connect(rabbitMQConnection, (error0, connection) => {
     if (error0) {
       moveerMessage.reportMoveerError('Unable to connect to rabbitMQ - @everyone')
@@ -58,7 +58,7 @@ client.on('ready', async () => {
       })
     })
   })
-})
+//})
 
 client.on('error', (err) => {
   console.log(err)
