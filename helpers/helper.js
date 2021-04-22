@@ -122,10 +122,10 @@ async function moveUsers(message, usersToMove, toVoiceChannelId, rabbitMqChannel
   })
   
   if (command === 'ymove') return
-  const guildObject = await database.getGuildObject(message, message.guild.id)
+  //const guildObject = await database.getGuildObject(message, message.guild.id)
   const ShouldISendRLMessage =
-    (usersMoved > 15 && guildObject.rowCount > 0 && guildObject.rows[0].sentRLMessage === '0') ||
-    (usersMoved > 15 && guildObject.rowCount === 0)
+    (usersMoved > 15 /*&& guildObject.rowCount > 0 && guildObject.rows[0].sentRLMessage === '0'*/) ||
+    (usersMoved > 15 /*&& guildObject.rowCount === 0*/)
   
   moveerMessage.logger(
     message,
@@ -146,8 +146,8 @@ async function moveUsers(message, usersToMove, toVoiceChannelId, rabbitMqChannel
       '>' +
       (ShouldISendRLMessage ? moveerMessage.TAKE_A_WHILE_RL_MESSAGE : '')
   )
-  if (ShouldISendRLMessage) database.updateSentRateLimitMessage(message, message.guild.id)
-  database.addSuccessfulMove(message, usersMoved)
+  //if (ShouldISendRLMessage) //database.updateSentRateLimitMessage(message, message.guild.id)
+  //database.addSuccessfulMove(message, usersMoved)
 }
 
 async function PublishToRabbitMq(message, userToMove, toVoiceChannelId, rabbitMqChannel) {
@@ -243,7 +243,7 @@ module.exports = {
   getRandomUsers,
   getCategoryByName,
   findUserByUserName,
-  getGuildGroupNames,
+//  getGuildGroupNames,
   getUserVoiceChannelIdByUserId,
   getUserVoiceChannelByVoiceChannelId,
   kickUsers,
