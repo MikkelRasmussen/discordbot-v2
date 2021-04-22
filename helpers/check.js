@@ -268,7 +268,7 @@ function ifAuthorInsideAVoiceChannel(message, userVoiceRoomID) {
     }
   }
 }
-
+/*
 const checkifPatreonGuildRepeat = async (message) => {
   // Check for patreon stuff
   const guildInfo = await database.getPatreonGuildObject(message, message.guild.id)
@@ -283,9 +283,9 @@ const checkifPatreonGuildRepeat = async (message) => {
   message.react('🔂').catch((e) => moveerMessage.logger(message, e.message + ' to react to message'))
   // End check for patreon stuff
 }
-
+*/
 module.exports = {
-  checkifPatreonGuildRepeat,
+  //checkifPatreonGuildRepeat,
   ifAuthorInsideAVoiceChannel,
   ifSelfMention,
   ifMessageContainsMentions,

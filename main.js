@@ -38,9 +38,14 @@ if (config.discordBotListToken !== 'x') {
   })
 }*/
 
-///client.on('ready', async () => {
+client.on('ready', async () => {
   log.info('Startup successful.')
  // log.info('Running as user: ' + client.user.username + ' ShardID: (' + client.shard.ids + ')')
+
+ 
+
+
+
   amqp.connect(rabbitMQConnection, (error0, connection) => {
     if (error0) {
       moveerMessage.reportMoveerError('Unable to connect to rabbitMQ - @everyone')
@@ -51,14 +56,57 @@ if (config.discordBotListToken !== 'x') {
         throw error1
       }
       rabbitMqChannel = channel
-      rabbitMqChannel.prefetch(1)
+      //rabbitMqChannel.prefetch(1)
       //Create a consumer for each guild that I'm inside
-      client.guilds.cache.forEach((guild) => {
-        createConsumer(guild.id, rabbitMqChannel)
+      //client.guilds.cache.forEach((guild) => {
+       // createConsumer(guild.id, rabbitMqChannel)
+      // createConsumer(rabbitMqChannel)
+      //})
+      console.log("connected to rabbitmq")
+      const queue = "ServerQueue";
+      rabbitMqChannel.assertQueue(queue, {
+        durable: false,
       })
+      rabbitMqChannel.consume(
+        queue,
+         async (msg) => {
+         
+          const jsonMsg = JSON.parse(msg.content.toString())
+          
+         try {
+            
+          
+            //await client.guilds.cache
+
+              await client.guilds.cache
+              .get(jsonMsg.guildId)
+              .member(jsonMsg.userId)
+              .voice.setChannel(jsonMsg.voiceChannelId)
+              .then(() => {
+               // log.info('(' + client.shard.ids + ') Success in moving: ' + jsonMsg.userId)
+              })
+              .catch((t) => {
+                if (t.message === 'Target user is not connected to voice.') {
+                 // log.warn('(' + client.shard.ids + ') Failure in moving: ' + jsonMsg.userId + ' - User not connected to voice')
+                } else {
+                //  log.error('(' + client.shard.ids + ') Failure in moving: ' + jsonMsg.userId + ' - Reason below')
+                  log.info(t)
+                  moveerMessage.reportMoveerError(t.message + '\n\n' + msg.content.toString())
+                }
+              })
+            //await rabbitMqChannel.ack(msg) // ack everything since this is master
+          } 
+          catch (err) {
+            console.log(err)
+            moveerMessage.reportMoveerError('Alert was caused by:\n' + err.stack)
+            await rabbitMqChannel.ack(msg) // ack everything since this is master
+          }
+        },{noAck : true}
+       // { noAck: false }
+      )
     })
   })
-//})
+})
 
 client.on('error', (err) => {
   console.log(err)
@@ -137,44 +185,16 @@ client.on('message', async (message) => {
   const args = message.content.slice(config.discordPrefix.length).trim().split(/ +/g)
   const command = args.shift().toLowerCase()
   handleCommand(command, message, args, rabbitMqChannel)
-})
+});
 
-client.login(token)
 
-function createConsumer(queue, rabbitMqChannel) {
-  log.info('Creating consumer for guild: ' + queue + ' on shardID: ' + client.shard.ids)
-  rabbitMqChannel.assertQueue(queue, {
-    durable: true,
-  })
-  rabbitMqChannel.consume(
-    queue,
-    async (msg) => {
-      const jsonMsg = JSON.parse(msg.content.toString())
 
-      try {
-        await client.guilds.cache
-          .get(jsonMsg.guildId)
-          .member(jsonMsg.userId)
-          .voice.setChannel(jsonMsg.voiceChannelId)
-          .then(() => {
-            log.info('(' + client.shard.ids + ') Success in moving: ' + jsonMsg.userId)
-          })
-          .catch((t) => {
-            if (t.message === 'Target user is not connected to voice.') {
-              log.warn('(' + client.shard.ids + ') Failure in moving: ' + jsonMsg.userId + ' - User not connected to voice')
-            } else {
-              log.error('(' + client.shard.ids + ') Failure in moving: ' + jsonMsg.userId + ' - Reason below')
-              log.info(t)
-              moveerMessage.reportMoveerError(t.message + '\n\n' + msg.content.toString())
-            }
-          })
-        await rabbitMqChannel.ack(msg) // ack everything since this is master
-      } catch (err) {
-        console.log(err)
-        moveerMessage.reportMoveerError('Alert was caused by:\n' + err.stack)
-        await rabbitMqChannel.ack(msg) // ack everything since this is master
-      }
-    },
-    { noAck: false }
-  )
-}
+
+
+
+ //function createConsumer(queue, rabbitMqChannel) {
+  //log.info('Creating consumer for guild: ' + queue + ' on shardID: ' + client.shard.ids)
+
+
+
+client.login(token);

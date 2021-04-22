@@ -42,7 +42,7 @@ async function move(args, message, rabbitMqChannel) {
       ? helper.moveUsers(message, userIdsToMove, toVoiceChannel.id, rabbitMqChannel)
       : moveerMessage.sendMessage(message, moveerMessage.USER_ALREADY_IN_CHANNEL('Everyone'))
 
-    check.checkifPatreonGuildRepeat(message)
+   // check.checkifPatreonGuildRepeat(message)
   } catch (err) {
     if (!err.logMessage) {
       console.log(err)

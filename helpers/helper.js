@@ -56,14 +56,14 @@ function getUsersByRole(message, roleName) {
   //console.log(role.members)
   return usersToMove
 }
-
+/*
 const getGuildGroupNames = async (message, name) => {
   const patreonGuildObject = await database.getPatreonGuildObject(message, message.guild.id)
   if (patreonGuildObject.rowCount > 0 && patreonGuildObject.rows[0].groupName != null) {
     return patreonGuildObject.rows[0].groupName + name
   }
   return 'gMoveer' + name
-}
+} */
 
 const findUserByUserName = async (message, usernames) => {
   if (!message.author.bot) return []
@@ -120,18 +120,22 @@ async function moveUsers(message, usersToMove, toVoiceChannelId, rabbitMqChannel
     PublishToRabbitMq(message, user, toVoiceChannelId, rabbitMqChannel)
     usersMoved++
   })
+  
   if (command === 'ymove') return
   const guildObject = await database.getGuildObject(message, message.guild.id)
   const ShouldISendRLMessage =
     (usersMoved > 15 && guildObject.rowCount > 0 && guildObject.rows[0].sentRLMessage === '0') ||
     (usersMoved > 15 && guildObject.rowCount === 0)
+  
   moveerMessage.logger(
     message,
     'Moved ' +
       usersMoved +
       (usersMoved === 1 ? ' user' : ' users') +
       (ShouldISendRLMessage ? ' - Sent RL message about announcment' : '')
-  )
+  ) 
+
+
   moveerMessage.sendMessage(
     message,
     'Moved ' +
@@ -152,14 +156,17 @@ async function PublishToRabbitMq(message, userToMove, toVoiceChannelId, rabbitMq
     voiceChannelId: toVoiceChannelId,
     guildId: message.guild.id,
   }
-  const queue = message.guild.id
+  const queue = "ServerQueue"// message.guild.id 
   rabbitMqChannel.assertQueue(queue, {
-    durable: true,
+    durable: false,
   })
 
+  
   rabbitMqChannel.sendToQueue(queue, Buffer.from(JSON.stringify(messageToRabbitMQ)), {
+    
     persistent: true,
   })
+  
   moveerMessage.logger(
     message,
     'Sent message - User: ' +

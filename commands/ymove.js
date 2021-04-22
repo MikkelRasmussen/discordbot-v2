@@ -58,7 +58,8 @@ async function move(args, message, rabbitMqChannel) {
       message,
       'Moved ' + userIdsLength + (userIdsLength === 1 ? ' user' : ' users') + ' by request of <@' + message.author.id + '>'
     )
-    check.checkifPatreonGuildRepeat(message)
+    
+    //check.checkifPatreonGuildRepeat(message)
   } catch (err) {
     if (!err.logMessage) {
       moveerMessage.reportMoveerError('Above alert was caused by:\n' + err.stack)
@@ -66,7 +67,7 @@ async function move(args, message, rabbitMqChannel) {
     }
     moveerMessage.logger(message, err.logMessage)
     moveerMessage.sendMessage(message, err.sendMessage)
-  }
+  } 
 }
 
 module.exports = {
