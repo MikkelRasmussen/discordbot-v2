@@ -1,7 +1,6 @@
 /* eslint-disable no-throw-literal */
 const moveerMessage = require('../moveerMessage.js')
 const config = require('../config.js')
-const database = require('./database.js')
 const helper = require('./helper')
 
 const valueEqNullorUndefinded = (value, operator = '==') => {

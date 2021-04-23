@@ -27,7 +27,7 @@ async function move(args, message, rabbitMqChannel) {
       (res, elem) => (elem.id !== toVoiceChannel.id ? res.concat(elem.members.map(({ id }) => id)) : res),
       []
     )
-
+      
     const userIdsInCategory = await voiceChannelsInCategory.reduce(
       (res, elem) => res.concat(elem.members.map(({ id }) => id)),
       []

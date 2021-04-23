@@ -5,93 +5,67 @@ const convertUserIdToTaggedUser = (userId) => {
   return '<@' + userId + '>'
 }
 
-const MESSAGE_MENTION_IS_NOT_TEXT = (userId) =>
-  convertUserIdToTaggedUser(userId) + ' - You need to mention the text channel using #nameoftextchannel.'
+
 
 const NO_EMTPY_VOICECHANNELS_IN_CATEGORY = (userId, categoryName) =>
   convertUserIdToTaggedUser(userId) +
-  ' - The category "' +
+  ' - Katagorien "' +
   categoryName +
-  '" is out of voice channels to move users to. Please add more voice channels.'
+  '" Mangler talekanaler til at flytte på brugere. Venligst opret flere talekanaler'
 
 const NOT_ENOUGH_VCHANNELS_IN_CATEGORY = (userId, categoryName) =>
-  convertUserIdToTaggedUser(userId) + ' - No voicechannels exists or no empty voicechannels in the category: ' + categoryName
+  convertUserIdToTaggedUser(userId) + ' - Talekanalen eksistere ikke, eller er ikke den valgte katagori ' + categoryName
 
-const MISSING_ARGS_IN_MESSAGE = 'Missing information in the command. See `!help <command>` for more information.'
-
-const USER_INSIDE_BLOCKED_CHANNEL = (userInBlockedChannel) =>
-  convertUserIdToTaggedUser(userInBlockedChannel) + ' is inside a blocked voice channel. Not moving!'
+const MISSING_ARGS_IN_MESSAGE = 'Mangler information i kommandoen. Brug !hjælp <kommando>'
 
 const NO_USER_FOUND_BY_SEARCH = (userId, username) =>
-  convertUserIdToTaggedUser(userId) + ' Cant find user with the username: ' + username
+  convertUserIdToTaggedUser(userId) + ' Kan ikke finde brugeren med navnet:' + username
 
 const MIGHT_BE_MISSING_FNUTTS_WARNING =
-  'If your voice channel contains spaces, please use "" around it. Example; `"channel with spaces"`.'
-
-const USER_MOVING_SELF = (userId) =>
-  'You need to @mention a friend you want to move, not yourself. Remove your own name (' +
-  convertUserIdToTaggedUser(userId) +
-  ') and try again.'
-
-const MESSAGE_MISSING_MENTION = (userId) => convertUserIdToTaggedUser(userId) + ' - You need to @mention a friend!'
+  'Hvis din talekanal indeholder mellemrum, hver venlig og bruge "" rundt om navnet. Eksempel: "KanalNavn". '
 
 const USER_NOT_IN_ANY_VOICE_CHANNEL = (userId) =>
-  convertUserIdToTaggedUser(userId) + ' - You need to join a voice channel before moving people with this command.'
+  convertUserIdToTaggedUser(userId) + ' - Du skal deltage i en talekanal, før du kan flytte med personer med denne kommando'
 
-const USER_INSIDE_MOVEER_VOICE_CHANNEL = (userId) =>
-  convertUserIdToTaggedUser(userId) + " - You can't move people into this voice channel, try one that isn't named moveer."
-
-const SERVER_HAS_TWO_MOVEER_VOICE_CHANNELS = 'You seem to be having two channels called Moveer, please remove one!'
-
-const MEMBER_COUNT_IN_VOICE_CHANNEL = (userId, voiceChannelName, count) =>
-  convertUserIdToTaggedUser(userId) +
-  '```Voice channel (' +
-  voiceChannelName +
-  ') currently has ' +
-  count +
-  (count === 1 ? ' member' : ' members') +
-  '.```'
+const SERVER_HAS_TWO_MOVEER_VOICE_CHANNELS = ' - Du har to kanaler der hedder lærekommandoer. Fjern venligst den ene'
 
 const NOT_ENOUGH_USERS_IN_CHANNEL = (userId, fromVoiceChannelName, actualAmount, expectedAmount) =>
   convertUserIdToTaggedUser(userId) +
-  ' - Not enough members inside the channel "' +
+  ' - Mangler personer i kanalen "' +
   fromVoiceChannelName +
-  '" to move. Found ' +
+  '" skal flyttes. Fandt ' +
   actualAmount +
-  (actualAmount === 1 ? ' user' : ' users') +
-  ', expected at least ' +
+  (actualAmount === 1 ? ' bruger' : ' brugere') +
+  ', forventede ' +
   expectedAmount
 
 const NOT_ENOUGH_USERS_IN_CATEGORY = (userId, fromCategoryName, actualAmount, expectedAmount) =>
   convertUserIdToTaggedUser(userId) +
-  ' - Not enough members inside the category "' +
+  ' - Not enough members inside the category | Mangler medlemmer i den katagori"' +
   fromCategoryName +
-  '" to move. Found ' +
+  '" skal flyttes. Fandt ' +
   actualAmount +
-  (actualAmount === 1 ? ' user' : ' users') +
-  ', expected at least ' +
+  (actualAmount === 1 ? ' bruger' : ' brugere') +
+  ', forventede ' +
   expectedAmount
-
-const SUPPORT_MESSAGE =
-  'Do you need support? Join us at the official discord and tag a moderator! https://discord.gg/dTdH3gD'
 
 const MOVEER_MISSING_CONNECT_PERMISSION = (userId, voiceChannelName) =>
   convertUserIdToTaggedUser(userId) +
-  " - Hey! Please make sure I got 'CONNECT' permissions in the voice channel named: " +
+  " - Har ikke adgang til at 'DELTAGE' i talekanalen med navet: " +
   voiceChannelName +
   '\n\n' +
   SUPPORT_MESSAGE
 
 const MOVEER_MISSING_MOVE_PERMISSION = (userId, voiceChannelName) =>
   convertUserIdToTaggedUser(userId) +
-  " - Hey! Please make sure I got 'MOVE_MEMBERS' permissions in the voice channel named: " +
+  " - Har ikke adgang til at 'Flytte på brugere' i talekanalen med navet:  " +
   voiceChannelName +
   '\n\n' +
   SUPPORT_MESSAGE
 
 const TAKE_A_WHILE_RL_MESSAGE =
-  '\n\nThis is going to take a while.. Want to move users faster? Check out the announcments channel in the official discord! https://discord.gg/dTdH3gD'
-
+  '\n\n Det her kan godt tage lidt tid'
+// -----------------------------------------------------------------------------------------------------
 const MESSAGES_NOW_ALLOWED_IN_CHANNEL = (userId, textChannelId) =>
   convertUserIdToTaggedUser(userId) +
   ' - Admin commands now allowed to be sent inside <#' +
@@ -142,30 +116,6 @@ const HELP_MESSAGE = {
       text: 'Support server: https://discord.gg/dTdH3gD',
     },
     fields: [
-      {
-        name: 'move',
-        value: 'Moves @mentions to you',
-      },
-      {
-        name: 'cmove',
-        value: 'Moves @mentions to a specific channel',
-      },
-      {
-        name: 'fmove',
-        value: 'Moves one channel to another channel',
-      },
-      {
-        name: 'gmove',
-        value: 'Moves everyone inside a channel to you',
-      },
-      {
-        name: 'rmove',
-        value: 'Moves everyone with a certain role to you',
-      },
-      {
-        name: 'tmove',
-        value: 'Moves everyone with a certain role to a specific channel',
-      },
       {
         name: 'ymove',
         value: 'Spreads x user from one channel to different voice channels inside a category',
@@ -442,12 +392,7 @@ function reportMoveerError(message) {
 }
 
 module.exports = {
-  USER_MOVING_SELF,
-  MESSAGE_MISSING_MENTION,
   USER_NOT_IN_ANY_VOICE_CHANNEL,
-  USER_INSIDE_MOVEER_VOICE_CHANNEL,
-  SERVER_HAS_TWO_MOVEER_VOICE_CHANNELS,
-  SUPPORT_MESSAGE,
   MOVEER_MISSING_CONNECT_PERMISSION,
   MOVEER_MISSING_MOVE_PERMISSION,
   MESSAGE_MISSING_ROOM_IDENTIFER,
@@ -456,47 +401,20 @@ module.exports = {
   NO_USERS_INSIDE_ROOM,
   ADMINCOMMAND_OUTSIDE_MOVEERADMIN,
   USER_MENTION_NOT_IN_ANY_CHANNEL,
-  HELP_CMOVE,
-  HELP_GMOVE,
-  HELP_MESSAGE,
-  HELP_MOVE,
-  HELP_FMOVE,
-  HELP_RMOVE,
-  HELP_TMOVE,
   logger,
   sendMessage,
   USER_ALREADY_IN_CHANNEL,
   VOICE_CHANNEL_NAMES_THE_SAME,
   MISSING_FNUTTS_IN_ARGS,
   USER_MOVED_WITH_TEXT_CHANNEL,
-  FALLBACK_HELP_CMOVE,
-  FALLBACK_HELP_FMOVE,
-  FALLBACK_HELP_GMOVE,
-  FALLBACK_HELP_MESSAGE,
-  FALLBACK_HELP_MOVE,
-  FALLBACK_HELP_TMOVE,
-  HELP_YMOVE,
-  FALLBACK_HELP_YMOVE,
-  HELP_ZMOVE,
-  FALLBACK_HELP_ZMOVE,
-  HELP_ADDMA,
-  FALLBACK_HELP_ADDMA,
-  HELP_REMOVEMA,
-  FALLBACK_HELP_REMOVEMA,
   reportMoveerError,
   NOT_ENOUGH_USERS_IN_CHANNEL,
   NOT_ENOUGH_USERS_IN_CATEGORY,
-  MISSING_ARGS_IN_MESSAGE,
   NOT_ENOUGH_VCHANNELS_IN_CATEGORY,
-  MIGHT_BE_MISSING_FNUTTS_WARNING,
-  USER_INSIDE_BLOCKED_CHANNEL,
   NO_EMTPY_VOICECHANNELS_IN_CATEGORY,
-  MESSAGE_MENTION_IS_NOT_TEXT,
   MESSAGES_NOW_ALLOWED_IN_CHANNEL,
   MESSAGES_NOT_ALLOWED_IN_CHANNEL,
   handleHelpCommand,
-  DB_DOWN_WARNING,
   NO_USER_FOUND_BY_SEARCH,
-  TAKE_A_WHILE_RL_MESSAGE,
-  MEMBER_COUNT_IN_VOICE_CHANNEL,
+
 }

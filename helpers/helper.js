@@ -1,7 +1,6 @@
 /* eslint-disable no-throw-literal */
 const moveerMessage = require('../moveerMessage.js')
 const config = require('../config.js')
-const database = require('../helpers/database.js')
 
 function getCategoryByName(message, categoryName) {
   let category = message.guild.channels.cache.find(
