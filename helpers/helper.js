@@ -156,15 +156,13 @@ async function PublishToRabbitMq(message, userToMove, toVoiceChannelId, rabbitMq
     voiceChannelId: toVoiceChannelId,
     guildId: message.guild.id,
   }
-  const queue = "ServerQueue"// message.guild.id 
+  const queue = "ServerQueue"
   rabbitMqChannel.assertQueue(queue, {
     durable: false,
   })
 
-  
   rabbitMqChannel.sendToQueue(queue, Buffer.from(JSON.stringify(messageToRabbitMQ)), {
     
-    persistent: true,
   })
   
   moveerMessage.logger(
