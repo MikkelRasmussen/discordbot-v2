@@ -1,5 +1,5 @@
 /* eslint-disable no-throw-literal */
-const moveerMessage = require('../moveerMessage.js')
+const CommandMessage = require('../CommandMessage.js')
 const config = require('../config.js')
 
 function getCategoryByName(message, categoryName) {
@@ -37,82 +37,6 @@ function getChannelByName(message, findByName) {
   return voiceChannel
 }
 
-function getUsersByRole(message, roleName) {
-  const role = message.guild.roles.cache.find(
-    (role) =>
-      role.name.toLowerCase() === roleName.toLowerCase() ||
-      role.id === roleName ||
-      role.name === '@' + roleName.toLowerCase()
-  )
-  const voiceStateMembers = message.guild.voiceStates.cache.map((user) => user.id)
-  if (role == null) {
-    throw {
-      logMessage: "Can't find role with the name: " + roleName,
-      sendMessage: "Can't find role with the name: " + roleName,
-    }
-  }
-  const usersToMove = role.members.filter((member) => voiceStateMembers.includes(member.id))
-  //console.log(role.members)
-  return usersToMove
-}
-/*
-const getGuildGroupNames = async (message, name) => {
-  const patreonGuildObject = await database.getPatreonGuildObject(message, message.guild.id)
-  if (patreonGuildObject.rowCount > 0 && patreonGuildObject.rows[0].groupName != null) {
-    return patreonGuildObject.rows[0].groupName + name
-  }
-  return 'gMoveer' + name
-} */
-
-const findUserByUserName = async (message, usernames) => {
-  if (!message.author.bot) return []
-  const usersToFind = usernames.join('__').replace(/".*"/, '').split('__')
-  usersToFind.shift()
-
-  const foundUsers = []
-  await usersToFind.forEach(async (username) => {
-    const user = await message.guild.members.cache.find(
-      (user) =>
-        user.user.username.toLowerCase() === username.toLowerCase() ||
-        (user.nickname && user.nickname.toLowerCase() === username.toLowerCase()) ||
-        user.id === username
-    )
-
-    if (user) {
-      foundUsers.push(user.user)
-    } else {
-      moveerMessage.logger(message, moveerMessage.NO_USER_FOUND_BY_SEARCH(message.author.id, username))
-      moveerMessage.sendMessage(message, moveerMessage.NO_USER_FOUND_BY_SEARCH(message.author.id, username))
-    }
-  })
-  if (foundUsers.length > 0) {
-    return foundUsers
-  }
-  return []
-}
-
-const kickUsers = async (message, userIdsToKick) => {
-  let usersKicked = 0
-  await userIdsToKick.forEach(async (userId) => {
-    const user = await message.guild.members.cache.find((user) => user.id === userId)
-    if (user) {
-      user.voice.kick().catch((err) => {
-        console.log(err)
-        moveerMessage.logger(message, 'FAILED to kick ' + userId + ' (User not found)')
-      })
-      usersKicked++
-      moveerMessage.logger(message, 'Kicked ' + userId)
-    } else {
-      moveerMessage.logger(message, 'FAILED to kick ' + userId + ' (User not found)')
-    }
-  })
-
-  await moveerMessage.sendMessage(
-    message,
-    '<@' + message.author.id + '> kicked ' + usersKicked + ' users from a voicechannel'
-  )
-}
-
 async function moveUsers(message, usersToMove, toVoiceChannelId, rabbitMqChannel, command) {
   let usersMoved = 0
   usersToMove.forEach((user) => {
@@ -120,13 +44,12 @@ async function moveUsers(message, usersToMove, toVoiceChannelId, rabbitMqChannel
     usersMoved++
   })
   
-  if (command === 'ymove') return
-  //const guildObject = await database.getGuildObject(message, message.guild.id)
+  if (command === 'tgrupper') return
   const ShouldISendRLMessage =
-    (usersMoved > 15 /*&& guildObject.rowCount > 0 && guildObject.rows[0].sentRLMessage === '0'*/) ||
-    (usersMoved > 15 /*&& guildObject.rowCount === 0*/)
+    (usersMoved > 15 ) ||
+    (usersMoved > 15 )
   
-  moveerMessage.logger(
+  CommandMessage.logger(
     message,
     'Moved ' +
       usersMoved +
@@ -135,7 +58,7 @@ async function moveUsers(message, usersToMove, toVoiceChannelId, rabbitMqChannel
   ) 
 
 
-  moveerMessage.sendMessage(
+  CommandMessage.sendMessage(
     message,
     'Moved ' +
       usersMoved +
@@ -143,10 +66,8 @@ async function moveUsers(message, usersToMove, toVoiceChannelId, rabbitMqChannel
       ' by request of <@' +
       message.author.id +
       '>' +
-      (ShouldISendRLMessage ? moveerMessage.TAKE_A_WHILE_RL_MESSAGE : '')
+      (ShouldISendRLMessage ? CommandMessage.TAKE_A_WHILE_RL_MESSAGE : '')
   )
-  //if (ShouldISendRLMessage) //database.updateSentRateLimitMessage(message, message.guild.id)
-  //database.addSuccessfulMove(message, usersMoved)
 }
 
 async function PublishToRabbitMq(message, userToMove, toVoiceChannelId, rabbitMqChannel) {
@@ -164,7 +85,7 @@ async function PublishToRabbitMq(message, userToMove, toVoiceChannelId, rabbitMq
     
   })
   
-  moveerMessage.logger(
+  CommandMessage.logger(
     message,
     'Sent message - User: ' +
       messageToRabbitMQ.userId +
@@ -198,8 +119,8 @@ function getNameWithSpacesName(args, authorId) {
     toVoiceChannelName = testTo
   } else {
     throw {
-      logMessage: moveerMessage.MISSING_FNUTTS_IN_ARGS(authorId),
-      sendMessage: moveerMessage.MISSING_FNUTTS_IN_ARGS(authorId),
+      logMessage: CommandMessage.MISSING_FNUTTS_IN_ARGS(authorId),
+      sendMessage: CommandMessage.MISSING_FNUTTS_IN_ARGS(authorId),
     }
   }
   return [fromVoiceChannelName, toVoiceChannelName]
@@ -236,12 +157,8 @@ module.exports = {
   moveUsers,
   getChannelByName,
   getNameWithSpacesName,
-  getUsersByRole,
   getRandomUsers,
   getCategoryByName,
-  findUserByUserName,
-//  getGuildGroupNames,
   getUserVoiceChannelIdByUserId,
   getUserVoiceChannelByVoiceChannelId,
-  kickUsers,
 }

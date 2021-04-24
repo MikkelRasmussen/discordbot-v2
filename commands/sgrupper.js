@@ -1,4 +1,4 @@
-const moveerMessage = require('../moveerMessage.js')
+const CommandMessage = require('../CommandMessage.js')
 const check = require('../helpers/check.js')
 const helper = require('../helpers/helper.js')
 
@@ -13,7 +13,7 @@ async function move(args, message, rabbitMqChannel) {
       voiceChannelName = names[1]
     }
 
-    await check.ifTextChannelIsMoveerAdmin(message)
+    await check.ifTextChannelIsadmin(message)
     check.argsLength(args, 2) // 2 since we use args.pop above to be able to use fnutthelper (only allows 2 args)
     check.ifMessageContainsMentions(message)
     const toVoiceChannel = helper.getChannelByName(message, voiceChannelName)
@@ -40,16 +40,16 @@ async function move(args, message, rabbitMqChannel) {
     // No errors in the message, lets get moving!
     userIdsToMove.length > 0
       ? helper.moveUsers(message, userIdsToMove, toVoiceChannel.id, rabbitMqChannel)
-      : moveerMessage.sendMessage(message, moveerMessage.USER_ALREADY_IN_CHANNEL('Everyone'))
+      : CommandMessage.sendMessage(message, CommandMessage.USER_ALREADY_IN_CHANNEL('Everyone'))
 
    // check.checkifPatreonGuildRepeat(message)
   } catch (err) {
     if (!err.logMessage) {
       console.log(err)
-      moveerMessage.reportMoveerError('Above alert was caused by:\n' + err.stack)
+      CommandMessage.reportCommandError('Above alert was caused by:\n' + err.stack)
     }
-    moveerMessage.logger(message, err.logMessage)
-    moveerMessage.sendMessage(message, err.sendMessage)
+    CommandMessage.logger(message, err.logMessage)
+    CommandMessage.sendMessage(message, err.sendMessage)
   }
 }
 

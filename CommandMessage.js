@@ -27,7 +27,7 @@ const MIGHT_BE_MISSING_FNUTTS_WARNING =
 const USER_NOT_IN_ANY_VOICE_CHANNEL = (userId) =>
   convertUserIdToTaggedUser(userId) + ' - Du skal deltage i en talekanal, før du kan flytte med personer med denne kommando'
 
-const SERVER_HAS_TWO_MOVEER_VOICE_CHANNELS = ' - Du har to kanaler der hedder lærekommandoer. Fjern venligst den ene'
+const SERVER_HAS_TWO_Command_VOICE_CHANNELS = ' - Du har to kanaler der hedder lærekommandoer. Fjern venligst den ene'
 
 const NOT_ENOUGH_USERS_IN_CHANNEL = (userId, fromVoiceChannelName, actualAmount, expectedAmount) =>
   convertUserIdToTaggedUser(userId) +
@@ -49,14 +49,14 @@ const NOT_ENOUGH_USERS_IN_CATEGORY = (userId, fromCategoryName, actualAmount, ex
   ', forventede ' +
   expectedAmount
 
-const MOVEER_MISSING_CONNECT_PERMISSION = (userId, voiceChannelName) =>
+const Command_MISSING_CONNECT_PERMISSION = (userId, voiceChannelName) =>
   convertUserIdToTaggedUser(userId) +
   " - Har ikke adgang til at 'DELTAGE' i talekanalen med navet: " +
   voiceChannelName +
   '\n\n' +
   SUPPORT_MESSAGE
 
-const MOVEER_MISSING_MOVE_PERMISSION = (userId, voiceChannelName) =>
+const Command_MISSING_MOVE_PERMISSION = (userId, voiceChannelName) =>
   convertUserIdToTaggedUser(userId) +
   " - Har ikke adgang til at 'Flytte på brugere' i talekanalen med navet:  " +
   voiceChannelName +
@@ -76,7 +76,7 @@ const MESSAGES_NOT_ALLOWED_IN_CHANNEL = (userId, textChannelId) =>
   convertUserIdToTaggedUser(userId) + ' - Admin not allowed inside <#' + textChannelId + '> anymore'
 
 const MESSAGE_MISSING_ROOM_IDENTIFER = (userId) =>
-  convertUserIdToTaggedUser(userId) + ' - You need to write a number to identify a gMoveer room!'
+  convertUserIdToTaggedUser(userId) + ' - You need to write a number to identify a gCommand room!'
 
 const MOVE_MESSAGE_CONTAINS_MENTIONS = (userId) =>
   convertUserIdToTaggedUser(userId) + " - You're not supposed to @mention members with this command."
@@ -87,9 +87,9 @@ const NO_VOICE_CHANNEL_NAMED_X = (channelName, userId) =>
 const NO_USERS_INSIDE_ROOM = (fromVoiceChannelName, userId) =>
   convertUserIdToTaggedUser(userId) + " - There's no users inside the voice channel: " + fromVoiceChannelName
 
-const ADMINCOMMAND_OUTSIDE_MOVEERADMIN = (userId) =>
+const ADMINCOMMAND_OUTSIDE_admin = (userId) =>
   convertUserIdToTaggedUser(userId) +
-  ' - This is an admin command, please use it inside a text channel with admin permissions. Default admin channel is `#moveeradmin` or add your own with `!addma #textchannel`.'
+  ' - This is an admin command, please use it inside a text channel with admin permissions. Default admin channel is `#admin` or add your own with `!addma #textchannel`.'
 
 const USER_MENTION_NOT_IN_ANY_CHANNEL = (userId) => convertUserIdToTaggedUser(userId) + ' is not inside any voice channel!'
 
@@ -98,7 +98,7 @@ const USER_ALREADY_IN_CHANNEL = (taggedUserId) =>
   ' is already inside that voice channel.'
 
 const DB_DOWN_WARNING =
-  "Moveer cannot communicate with it's database. Since this is a admin command please create a text channel named moveeradmin and use that until my developer fixes this! He has been alerted but please poke him inside the support server! https://discord.gg/dTdH3gD"
+  "Command cannot communicate with it's database. Since this is a admin command please create a text channel named admin and use that until my developer fixes this! He has been alerted but please poke him inside the support server! https://discord.gg/dTdH3gD"
 
 const VOICE_CHANNEL_NAMES_THE_SAME = (userId) =>
   convertUserIdToTaggedUser(userId) + " - Please specify one channel to move from and one to move to. It can't be the same."
@@ -117,22 +117,22 @@ const HELP_MESSAGE = {
     },
     fields: [
       {
-        name: 'ymove',
+        name: 'tgrupper',
         value: 'Spreads x user from one channel to different voice channels inside a category',
       },
       {
-        name: 'zmove',
+        name: 'sgrupper',
         value: "Moves all users inside a category's voice channels to a specific channel",
       },
       {
         name: 'addma',
         value:
-          'Allows moveeradmin commands to be sent from a secondary text channel of your choice \n`!addma #<channelName>`',
+          'Allows admin commands to be sent from a secondary text channel of your choice \n`!addma #<channelName>`',
       },
       {
         name: 'removema',
         value:
-          'Remove the permission of moveeradmin commands to be sent from a secondary text channel. \n`!removema #<channelName>`\n\nFor more information, use !help <command>',
+          'Remove the permission of admin commands to be sent from a secondary text channel. \n`!removema #<channelName>`\n\nFor more information, use !help <command>',
       },
     ],
   },
@@ -150,7 +150,7 @@ const HELP_CMOVE = {
       {
         name: '!cmove',
         value:
-          "1. Create a text channel named 'moveeradmin'\n2. Tell your friends to join any voice channel.\n3. Write `!cmove <voicechannel name or id> @user1 @user2`\n \nThis command doesn't require the author to be inside a voice channel. All `!cmove` commands has to be sent inside 'moveeradmin' since this is an admin only command.\nExample usage:\n`!cmove Channel1 @Fragstealern#2543`\n`!cmove 569909202437406750 @Fragstealern#2543`\n(If your voice channel contains spaces use\n`!cmove \"channel 2\" @Fragstealern#2543`)",
+          "1. Create a text channel named 'admin'\n2. Tell your friends to join any voice channel.\n3. Write `!cmove <voicechannel name or id> @user1 @user2`\n \nThis command doesn't require the author to be inside a voice channel. All `!cmove` commands has to be sent inside 'admin' since this is an admin only command.\nExample usage:\n`!cmove Channel1 @Fragstealern#2543`\n`!cmove 569909202437406750 @Fragstealern#2543`\n(If your voice channel contains spaces use\n`!cmove \"channel 2\" @Fragstealern#2543`)",
       },
     ],
   },
@@ -167,7 +167,7 @@ const HELP_GMOVE = {
       {
         name: '!gmove',
         value:
-          "Group moving without using @tags!\n1. Create a voice channel named 'gMoveer[name here]' ← Notice that there is no space between the name and 'gMoveer'.\n2. Join the voice channel you want to move users to\n3. Tell your friends to join your 'gMoveer' channel.\n4. Write `!gmove [name of the channel]`, do not include 'gMoveer'\n\nExample: Let's say I have a 'gMoveer' channel named 'gMoveerIce'. The command would look like this; `!gmove Ice` and it would move the members to your voice channel.\n(If your voice channel contains spaces use \n`!gmove \"channel 1\"`)",
+          "Group moving without using @tags!\n1. Create a voice channel named 'gCommand[name here]' ← Notice that there is no space between the name and 'gCommand'.\n2. Join the voice channel you want to move users to\n3. Tell your friends to join your 'gCommand' channel.\n4. Write `!gmove [name of the channel]`, do not include 'gCommand'\n\nExample: Let's say I have a 'gCommand' channel named 'gCommandIce'. The command would look like this; `!gmove Ice` and it would move the members to your voice channel.\n(If your voice channel contains spaces use \n`!gmove \"channel 1\"`)",
       },
     ],
   },
@@ -184,7 +184,7 @@ const HELP_MOVE = {
       {
         name: '!move',
         value:
-          "1. Create a voice channel named 'Moveer'\n2. Join a voice channel (Not 'Moveer')\n3. Tell users you want to move to join the channel 'Moveer'\n4. Write `!move @user1 @user2`\n \nThis command also contains an admin version that requires a text channel named 'moveeradmin'. `!move` commands sent inside this channel removes the requirement of @user1 & @user2 to join the 'Moveer' channel.\nThe author of the command can move people from any channel to any other channel.\n ",
+          "1. Create a voice channel named 'Command'\n2. Join a voice channel (Not 'Command')\n3. Tell users you want to move to join the channel 'Command'\n4. Write `!move @user1 @user2`\n \nThis command also contains an admin version that requires a text channel named 'admin'. `!move` commands sent inside this channel removes the requirement of @user1 & @user2 to join the 'Command' channel.\nThe author of the command can move people from any channel to any other channel.\n ",
       },
     ],
   },
@@ -201,7 +201,7 @@ const HELP_FMOVE = {
       {
         name: '!fmove',
         value:
-          '1. Tell users you want to move to join voice channel A\n2. Write `!fmove A B` where B is the voice channel you want to move them\n \nThis command requires to be sent from the text channel \'moveeradmin\'.\n(If your voice channel contains spaces use\n`!fmove "channel 1" "channel 2"`)',
+          '1. Tell users you want to move to join voice channel A\n2. Write `!fmove A B` where B is the voice channel you want to move them\n \nThis command requires to be sent from the text channel \'admin\'.\n(If your voice channel contains spaces use\n`!fmove "channel 1" "channel 2"`)',
       },
     ],
   },
@@ -218,7 +218,7 @@ const HELP_RMOVE = {
       {
         name: '!rmove',
         value:
-          '1. Tell users you want to move, to join any voice channel\n2. Join any other voice channel and write `!rmove damage` where damage is the role name you want to move\n \nThis command requires to be sent from the text channel \'moveeradmin\'.\nIf your role contains spaces use\n`!rmove "super admins"`',
+          '1. Tell users you want to move, to join any voice channel\n2. Join any other voice channel and write `!rmove damage` where damage is the role name you want to move\n \nThis command requires to be sent from the text channel \'admin\'.\nIf your role contains spaces use\n`!rmove "super admins"`',
       },
     ],
   },
@@ -235,14 +235,14 @@ const HELP_TMOVE = {
       {
         name: '!tmove',
         value:
-          '1. Tell users you want to move to join any voice channel\n2. Write `!tmove channel1 damage` where damage is the role name you want to move and channel1 is the voice channel\n \nThis command requires to be sent from the text channel \'moveeradmin\'.\nIf your role contains spaces use\n`!tmove channel1 "super admins"`',
+          '1. Tell users you want to move to join any voice channel\n2. Write `!tmove channel1 damage` where damage is the role name you want to move and channel1 is the voice channel\n \nThis command requires to be sent from the text channel \'admin\'.\nIf your role contains spaces use\n`!tmove channel1 "super admins"`',
       },
     ],
   },
 }
-// YMOVE
+// tgrupper
 
-const HELP_YMOVE = {
+const HELP_tgrupper = {
   embed: {
     color: 2387002,
     footer: {
@@ -250,15 +250,15 @@ const HELP_YMOVE = {
     },
     fields: [
       {
-        name: '!ymove',
+        name: '!tgrupper',
         value:
-          '1. Tell users you want to move to join voice channel "before games"\n2. Create a couple of voice channels under a category named "games"\n3. Write `!ymove "before games" "games" 5`\n4. Now Moveer should spread users from the voice channel "beforegames" across the different voice channels inside the category "games". 5 users in each channel.  \nThis command requires to be sent from the text channel \'moveeradmin\'',
+          '1. Tell users you want to move to join voice channel "before games"\n2. Create a couple of voice channels under a category named "games"\n3. Write `!tgrupper "before games" "games" 5`\n4. Now Command should spread users from the voice channel "beforegames" across the different voice channels inside the category "games". 5 users in each channel.  \nThis command requires to be sent from the text channel \'admin\'',
       },
     ],
   },
 }
 
-const HELP_ZMOVE = {
+const HELP_sgrupper = {
   embed: {
     color: 2387002,
     footer: {
@@ -268,7 +268,7 @@ const HELP_ZMOVE = {
       {
         name: 'move',
         value:
-          'Best used to move everyone back to a single channel after !ymove is used\n1. Create a couple of voice channels under a category named "games"\n3. Write `!zmove "games" "after games"`\n4. Moveer should now move all users from all the voice channels inside the category "games" to the "after games" voice channel. \nThis command requires to be sent from the text channel \'moveeradmin\'',
+          'Best used to move everyone back to a single channel after !tgrupper is used\n1. Create a couple of voice channels under a category named "games"\n3. Write `!sgrupper "games" "after games"`\n4. Command should now move all users from all the voice channels inside the category "games" to the "after games" voice channel. \nThis command requires to be sent from the text channel \'admin\'',
       },
     ],
   },
@@ -284,7 +284,7 @@ const HELP_ADDMA = {
       {
         name: '!addma',
         value:
-          '1. Write !addma #<channelName>\n2. Moveer should reply that admin commands are now allowed inside #<channelName>\nBe sure the actually # tagging the text channel name',
+          '1. Write !addma #<channelName>\n2. Command should reply that admin commands are now allowed inside #<channelName>\nBe sure the actually # tagging the text channel name',
       },
     ],
   },
@@ -300,7 +300,7 @@ const HELP_REMOVEMA = {
       {
         name: '!removema',
         value:
-          '1. Write !removema #<channelName>\n2. Moveer should reply that admin commands are no longer allowed inside #<channelName>\nBe sure the actually # tagging the text channel name',
+          '1. Write !removema #<channelName>\n2. Command should reply that admin commands are no longer allowed inside #<channelName>\nBe sure the actually # tagging the text channel name',
       },
     ],
   },
@@ -316,8 +316,8 @@ const FALLBACK_HELP_CMOVE = HELP_CMOVE.embed.fields[0].value
 const FALLBACK_HELP_MOVE = HELP_MOVE.embed.fields[0].value
 const FALLBACK_HELP_GMOVE = HELP_GMOVE.embed.fields[0].value
 const FALLBACK_HELP_TMOVE = HELP_TMOVE.embed.fields[0].value
-const FALLBACK_HELP_YMOVE = HELP_YMOVE.embed.fields[0].value
-const FALLBACK_HELP_ZMOVE = HELP_ZMOVE.embed.fields[0].value
+const FALLBACK_HELP_tgrupper = HELP_tgrupper.embed.fields[0].value
+const FALLBACK_HELP_sgrupper = HELP_sgrupper.embed.fields[0].value
 const FALLBACK_HELP_ADDMA = HELP_ADDMA.embed.fields[0].value
 const FALLBACK_HELP_REMOVEMA = HELP_REMOVEMA.embed.fields[0].value
 const FALLBACK_HELP_RMOVE = HELP_RMOVE.embed.fields[0].value
@@ -334,10 +334,10 @@ const handleHelpCommand = (helpCommand, gotEmbedPerms) => {
       return gotEmbedPerms ? HELP_MOVE : FALLBACK_HELP_MOVE
     case 'gmove':
       return gotEmbedPerms ? HELP_GMOVE : FALLBACK_HELP_GMOVE
-    case 'ymove':
-      return gotEmbedPerms ? HELP_YMOVE : FALLBACK_HELP_YMOVE
-    case 'zmove':
-      return gotEmbedPerms ? HELP_ZMOVE : FALLBACK_HELP_ZMOVE
+    case 'tgrupper':
+      return gotEmbedPerms ? HELP_tgrupper : FALLBACK_HELP_tgrupper
+    case 'sgrupper':
+      return gotEmbedPerms ? HELP_sgrupper : FALLBACK_HELP_sgrupper
     case 'tmove':
       return gotEmbedPerms ? HELP_TMOVE : FALLBACK_HELP_TMOVE
     case 'addma':
@@ -353,7 +353,7 @@ function sendMessage(message, sendMessage) {
   if (sendMessage === 'notFound') return // Ignore this. failed to find HELP message by args
   // eslint-disable-next-line eqeqeq
   if (sendMessage == null) {
-    reportMoveerError('I was about to send a NULL message - Probably errors in code.. @everyone')
+    reportCommandError('I was about to send a NULL message - Probably errors in code.. @everyone')
     return
   }
 
@@ -384,7 +384,7 @@ function logger(message, logMessage) {
   )
 }
 
-function reportMoveerError(message) {
+function reportCommandError(message) {
   const Discord = require('discord.js')
   const hook = new Discord.WebhookClient(config.discordHookIdentifier, config.discordHookToken)
   log.info('Sending error to DB HOOK')
@@ -393,13 +393,13 @@ function reportMoveerError(message) {
 
 module.exports = {
   USER_NOT_IN_ANY_VOICE_CHANNEL,
-  MOVEER_MISSING_CONNECT_PERMISSION,
-  MOVEER_MISSING_MOVE_PERMISSION,
+  Command_MISSING_CONNECT_PERMISSION,
+  Command_MISSING_MOVE_PERMISSION,
   MESSAGE_MISSING_ROOM_IDENTIFER,
   MOVE_MESSAGE_CONTAINS_MENTIONS,
   NO_VOICE_CHANNEL_NAMED_X,
   NO_USERS_INSIDE_ROOM,
-  ADMINCOMMAND_OUTSIDE_MOVEERADMIN,
+  ADMINCOMMAND_OUTSIDE_admin,
   USER_MENTION_NOT_IN_ANY_CHANNEL,
   logger,
   sendMessage,
@@ -407,7 +407,7 @@ module.exports = {
   VOICE_CHANNEL_NAMES_THE_SAME,
   MISSING_FNUTTS_IN_ARGS,
   USER_MOVED_WITH_TEXT_CHANNEL,
-  reportMoveerError,
+  reportCommandError,
   NOT_ENOUGH_USERS_IN_CHANNEL,
   NOT_ENOUGH_USERS_IN_CATEGORY,
   NOT_ENOUGH_VCHANNELS_IN_CATEGORY,

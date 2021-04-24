@@ -1,5 +1,5 @@
 /* eslint-disable no-throw-literal */
-const moveerMessage = require('../moveerMessage.js')
+const CommandMessage = require('../CommandMessage.js')
 const config = require('../config.js')
 const helper = require('./helper')
 
@@ -18,7 +18,7 @@ function ifChannelTextExpectText(message) {
   if (message.mentions.channels.first().type !== 'text') {
     throw {
       logMessage: 'Mention is not type text',
-      sendMessage: moveerMessage.MESSAGE_MENTION_IS_NOT_TEXT(message.author.id),
+      sendMessage: CommandMessage.MESSAGE_MENTION_IS_NOT_TEXT(message.author.id),
     }
   }
 }
@@ -26,27 +26,27 @@ function ifChannelTextExpectText(message) {
 function ifUserInsideBlockedChannel(message, usersToMove) {
   usersToMove.forEach((user) => {
     if (config.blockedVoiceChannels.includes(user.voiceChannelID)) {
-      moveerMessage.logger(message, 'One user in blocked voice channel')
-      moveerMessage.sendMessage(message, moveerMessage.USER_INSIDE_BLOCKED_CHANNEL(user.user.id))
+      CommandMessage.logger(message, 'One user in blocked voice channel')
+      CommandMessage.sendMessage(message, CommandMessage.USER_INSIDE_BLOCKED_CHANNEL(user.user.id))
     }
   })
   return usersToMove.filter((user) => !config.blockedVoiceChannels.includes(user.voiceChannelID))
 }
 
-function ifVoiceChannelContainsMoveer(message, authorVoiceChannelName) {
-  if (authorVoiceChannelName.toLowerCase().includes('moveer')) {
+function ifVoiceChannelContainsCommand(message, authorVoiceChannelName) {
+  if (authorVoiceChannelName.toLowerCase().includes('Command')) {
     throw {
-      logMessage: 'User trying to move people into a moveer channel',
-      sendMessage: moveerMessage.USER_INSIDE_MOVEER_VOICE_CHANNEL(message.author.id),
+      logMessage: 'User trying to move people into a Command channel',
+      sendMessage: CommandMessage.USER_INSIDE_Command_VOICE_CHANNEL(message.author.id),
     }
   }
 }
 
-function ifGuildHasTwoMoveerChannels(message) {
-  if (message.guild.channels.cache.filter((channel) => channel.name.toLowerCase() === 'moveer').size > 1) {
+function ifGuildHasTwoCommandChannels(message) {
+  if (message.guild.channels.cache.filter((channel) => channel.name.toLowerCase() === 'Command').size > 1) {
     throw {
-      logMessage: 'User has two channels called moveer/Moveer',
-      sendMessage: moveerMessage.SERVER_HAS_TWO_MOVEER_VOICE_CHANNELS,
+      logMessage: 'User has two channels called Command/Command',
+      sendMessage: CommandMessage.SERVER_HAS_TWO_Command_VOICE_CHANNELS,
     }
   }
 }
@@ -56,9 +56,9 @@ async function ifMentionsInsideVoiceChannel(message, messageMentions, sendErrorM
   for (let i = 0; i < messageMentions.length; i++) {
     const userVoiceChannelId = await helper.getUserVoiceChannelIdByUserId(message, messageMentions[i].id)
     if (valueEqNullorUndefinded(userVoiceChannelId)) {
-      moveerMessage.logger(message, 'Not moving ' + messageMentions[i].id + ', not in any voice channel!')
+      CommandMessage.logger(message, 'Not moving ' + messageMentions[i].id + ', not in any voice channel!')
       if (sendErrorMsg)
-        moveerMessage.sendMessage(message, moveerMessage.USER_MENTION_NOT_IN_ANY_CHANNEL(messageMentions[i].id))
+        CommandMessage.sendMessage(message, CommandMessage.USER_MENTION_NOT_IN_ANY_CHANNEL(messageMentions[i].id))
       usersToRemoveFromMentions.push(messageMentions[i].id)
     }
   }
@@ -74,8 +74,8 @@ async function ifUsersAlreadyInChannel(message, messageMentions, toVoiceChannelI
     if (userVoiceChannelId === toVoiceChannelId) {
       usersToRemoveFromMentions.push(messageMentions[i].id)
       if (command === 'rmove' || command === 'tmove') continue // Don't send already in channel alert on rmove and tmove
-      moveerMessage.logger(message, 'Not moving user, ' + messageMentions[i].id + ' is already in ' + toVoiceChannelId)
-      moveerMessage.sendMessage(message, moveerMessage.USER_ALREADY_IN_CHANNEL(messageMentions[i].id))
+      CommandMessage.logger(message, 'Not moving user, ' + messageMentions[i].id + ' is already in ' + toVoiceChannelId)
+      CommandMessage.sendMessage(message, CommandMessage.USER_ALREADY_IN_CHANNEL(messageMentions[i].id))
     }
   }
   return messageMentions.filter((user) => !usersToRemoveFromMentions.includes(user.id))
@@ -87,15 +87,15 @@ async function forConnectPerms(message, users, voiceChannel) {
     const userVoiceChannel = await helper.getUserVoiceChannelByVoiceChannelId(message, userVoiceChannelId)
     if (await !userVoiceChannel.memberPermissions(message.guild.me).has('CONNECT')) {
       throw {
-        logMessage: 'Moveer is missing CONNECT permission',
-        sendMessage: moveerMessage.MOVEER_MISSING_CONNECT_PERMISSION(message.author.id, userVoiceChannel.name),
+        logMessage: 'Command is missing CONNECT permission',
+        sendMessage: CommandMessage.Command_MISSING_CONNECT_PERMISSION(message.author.id, userVoiceChannel.name),
       }
     }
   }
   if (await !voiceChannel.memberPermissions(message.guild.me).has('CONNECT')) {
     throw {
-      logMessage: 'Moveer is missing CONNECT permission',
-      sendMessage: moveerMessage.MOVEER_MISSING_CONNECT_PERMISSION(message.author.id, voiceChannel.name),
+      logMessage: 'Command is missing CONNECT permission',
+      sendMessage: CommandMessage.Command_MISSING_CONNECT_PERMISSION(message.author.id, voiceChannel.name),
     }
   }
 }
@@ -106,15 +106,15 @@ async function forMovePerms(message, users, voiceChannel) {
     const userVoiceChannel = await helper.getUserVoiceChannelByVoiceChannelId(message, userVoiceChannelId)
     if (await !userVoiceChannel.memberPermissions(message.guild.me).has('MOVE_MEMBERS')) {
       throw {
-        logMessage: 'Moveer is missing Move Members permission',
-        sendMessage: moveerMessage.MOVEER_MISSING_MOVE_PERMISSION(message.author.id, userVoiceChannel.name),
+        logMessage: 'Command is missing Move Members permission',
+        sendMessage: CommandMessage.Command_MISSING_MOVE_PERMISSION(message.author.id, userVoiceChannel.name),
       }
     }
   }
   if (await !voiceChannel.memberPermissions(message.guild.me).has('MOVE_MEMBERS')) {
     throw {
-      logMessage: 'Moveer is missing Move Members permission',
-      sendMessage: moveerMessage.MOVEER_MISSING_MOVE_PERMISSION(message.author.id, voiceChannel.name),
+      logMessage: 'Command is missing Move Members permission',
+      sendMessage: CommandMessage.Command_MISSING_MOVE_PERMISSION(message.author.id, voiceChannel.name),
     }
   }
 }
@@ -123,7 +123,7 @@ function ifChannelIsTextChannel(message, channel) {
   if (channel.type === 'text') {
     throw {
       logMessage: 'User tried to move with textchannels',
-      sendMessage: moveerMessage.USER_MOVED_WITH_TEXT_CHANNEL(channel.id),
+      sendMessage: CommandMessage.USER_MOVED_WITH_TEXT_CHANNEL(channel.id),
     }
   }
 }
@@ -133,7 +133,7 @@ function ifCatergyHasRoomsAvailable(message, voiceChannelCounter, voiceChannelsI
     // Out of rooms to move people to.
     throw {
       logMessage: 'Category: ' + categoryName + ' is out of voice channels to move users to',
-      sendMessage: moveerMessage.NO_EMTPY_VOICECHANNELS_IN_CATEGORY(message.author.id, categoryName),
+      sendMessage: CommandMessage.NO_EMTPY_VOICECHANNELS_IN_CATEGORY(message.author.id, categoryName),
     }
   }
 }
@@ -142,14 +142,14 @@ function countOfChannelsFromCategory(message, CountOfChannelsFromCategory, categ
   if (CountOfChannelsFromCategory.length === 0) {
     throw {
       logMessage: 'Not enough voice channels in the category: ' + categoryName,
-      sendMessage: moveerMessage.NOT_ENOUGH_VCHANNELS_IN_CATEGORY(message.author.id, categoryName),
+      sendMessage: CommandMessage.NOT_ENOUGH_VCHANNELS_IN_CATEGORY(message.author.id, categoryName),
     }
   }
 }
 
 function userAmountInChannel(message, amount, expectedAmount, fromVoiceChannelName) {
   if (amount < expectedAmount) {
-    const m = moveerMessage.NOT_ENOUGH_USERS_IN_CHANNEL(message.author.id, fromVoiceChannelName, amount, expectedAmount)
+    const m = CommandMessage.NOT_ENOUGH_USERS_IN_CHANNEL(message.author.id, fromVoiceChannelName, amount, expectedAmount)
     throw {
       logMessage: m,
       sendMessage: m,
@@ -159,7 +159,7 @@ function userAmountInChannel(message, amount, expectedAmount, fromVoiceChannelNa
 
 function userAmountInCategory(message, amount, expectedAmount, fromCategoryName) {
   if (amount < expectedAmount) {
-    const m = moveerMessage.NOT_ENOUGH_USERS_IN_CATEGORY(message.author.id, fromCategoryName, amount, expectedAmount)
+    const m = CommandMessage.NOT_ENOUGH_USERS_IN_CATEGORY(message.author.id, fromCategoryName, amount, expectedAmount)
     throw {
       logMessage: m,
       sendMessage: m,
@@ -179,10 +179,10 @@ function ifVoiceChannelExist(message, voiceChannel, channelName) {
         (message.content.slice(config.discordPrefix.length).trim().split(/ +/g).length > 3 ? ' - Sent fnutt helper' : ''),
       sendMessage:
         command === 'move'
-          ? moveerMessage.NO_VOICE_CHANNEL_NAMED_X(channelName, message.author.id)
-          : moveerMessage.NO_VOICE_CHANNEL_NAMED_X(channelName, message.author.id) +
+          ? CommandMessage.NO_VOICE_CHANNEL_NAMED_X(channelName, message.author.id)
+          : CommandMessage.NO_VOICE_CHANNEL_NAMED_X(channelName, message.author.id) +
             (message.content.slice(config.discordPrefix.length).trim().split(/ +/g).length > 3
-              ? '\n' + moveerMessage.MIGHT_BE_MISSING_FNUTTS_WARNING
+              ? '\n' + CommandMessage.MIGHT_BE_MISSING_FNUTTS_WARNING
               : ''),
     }
   }
@@ -191,8 +191,8 @@ function ifVoiceChannelExist(message, voiceChannel, channelName) {
 function argsLength(args, expectedLength) {
   if (args.length < expectedLength) {
     throw {
-      logMessage: 'Missing one or more arguments.',
-      sendMessage: moveerMessage.MISSING_ARGS_IN_MESSAGE,
+      logMessage: 'Mangler en eller flere argumenter.',
+      sendMessage: CommandMessage.MISSING_ARGS_IN_MESSAGE,
     }
   }
 }
@@ -201,7 +201,7 @@ function ifArgsTheSame(message, args) {
   if (args[0].toLowerCase() === args[1].toLowerCase()) {
     throw {
       logMessage: 'Same voice channel name',
-      sendMessage: moveerMessage.VOICE_CHANNEL_NAMES_THE_SAME(message.author.id),
+      sendMessage: CommandMessage.VOICE_CHANNEL_NAMES_THE_SAME(message.author.id),
     }
   }
 }
@@ -211,32 +211,26 @@ function ifUsersInsideVoiceChannel(message, fromVoiceChannelName, fromVoiceChann
   if (fromVoiceChannel.members.size < 1) {
     throw {
       logMessage: 'No users inside the channel: ' + fromVoiceChannelName,
-      sendMessage: moveerMessage.NO_USERS_INSIDE_ROOM(fromVoiceChannelName, message.author.id),
+      sendMessage: CommandMessage.NO_USERS_INSIDE_ROOM(fromVoiceChannelName, message.author.id),
     }
   }
 }
 
-async function ifTextChannelIsMoveerAdmin(message, throwError = true) {
-  if (message.channel.name.toLowerCase() !== 'moveeradmin') {
-    const searchForGuild = await database.getGuildObject(message, message.guild.id)
-    if (searchForGuild.rowCount > 0 && searchForGuild.rows[0].adminChannelId.split(',').includes(message.channel.id)) {
-      // console.log('all green')
-    } else {
-      // console.log('throwing')
+async function ifTextChannelIsadmin(message, throwError = true) {
+  if (message.channel.name.toLowerCase() !== 'admin') {
       if (!throwError) return throwError
       throw {
-        logMessage: 'Command made outside moveeradmin',
-        sendMessage: moveerMessage.ADMINCOMMAND_OUTSIDE_MOVEERADMIN(message.author.id),
+        logMessage: 'Command made outside admin',
+        sendMessage: CommandMessage.ADMINCOMMAND_OUTSIDE_admin(message.author.id),
       }
     }
-  }
 }
 
 function forUserMentions(message, messageMentions) {
   if (messageMentions.length < 1) {
     throw {
       logMessage: '@Mention is missing',
-      sendMessage: moveerMessage.MESSAGE_MISSING_MENTION(message.author.id),
+      sendMessage: CommandMessage.MESSAGE_MISSING_MENTION(message.author.id),
     }
   }
 }
@@ -245,7 +239,7 @@ function ifMessageContainsMentions(message) {
   if (message.mentions.users.size > 0) {
     throw {
       logMessage: 'User tried to mention while moving groups',
-      sendMessage: moveerMessage.MOVE_MESSAGE_CONTAINS_MENTIONS(message.author.id),
+      sendMessage: CommandMessage.MOVE_MESSAGE_CONTAINS_MENTIONS(message.author.id),
     }
   }
 }
@@ -254,7 +248,7 @@ function ifSelfMention(message) {
   if (message.mentions.users.has(message.author.id)) {
     throw {
       logMessage: 'User trying to move himself',
-      sendMessage: moveerMessage.USER_MOVING_SELF(message.author.id),
+      sendMessage: CommandMessage.USER_MOVING_SELF(message.author.id),
     }
   }
 }
@@ -263,7 +257,7 @@ function ifAuthorInsideAVoiceChannel(message, userVoiceRoomID) {
   if (valueEqNullorUndefinded(userVoiceRoomID)) {
     throw {
       logMessage: 'User tried to move people without being inside a voice room',
-      sendMessage: moveerMessage.USER_NOT_IN_ANY_VOICE_CHANNEL(message.author.id),
+      sendMessage: CommandMessage.USER_NOT_IN_ANY_VOICE_CHANNEL(message.author.id),
     }
   }
 }
@@ -274,13 +268,13 @@ module.exports = {
   ifSelfMention,
   ifMessageContainsMentions,
   forUserMentions,
-  ifTextChannelIsMoveerAdmin,
+  ifTextChannelIsadmin,
   ifUsersInsideVoiceChannel,
   ifArgsTheSame,
   ifChannelTextExpectText,
   ifUserInsideBlockedChannel,
-  ifVoiceChannelContainsMoveer,
-  ifGuildHasTwoMoveerChannels,
+  ifVoiceChannelContainsCommand,
+  ifGuildHasTwoCommandChannels,
   ifMentionsInsideVoiceChannel,
   argsLength,
   ifVoiceChannelExist,

@@ -7,7 +7,7 @@ const amqp = require('amqplib/callback_api')
 // TOKEN
 const config = require('./config.js')
 const token = config.discordToken
-const moveerMessage = require('./moveerMessage.js')
+const CommandMessage = require('./CommandMessage.js')
 const { handleCommand } = require('./commandHandler.js')
 
 // rabbitMQ
@@ -23,7 +23,7 @@ client.on('ready', async () => {
 
   amqp.connect(rabbitMQConnection, (error0, connection) => {
     if (error0) {
-      moveerMessage.reportMoveerError('Unable to connect to rabbitMQ - @everyone')
+      CommandMessage.reportCommandError('Kan ikke forbinde til rabbitMQ')
       throw error0
     }
     connection.createChannel((error1, channel) => {
@@ -52,7 +52,7 @@ client.on('ready', async () => {
           } 
           catch (err) {
             console.log(err)
-            moveerMessage.reportMoveerError('Alert was caused by:\n' + err.stack)
+            CommandMessage.reportCommandError('Fejl:\n' + err.stack)
             await rabbitMqChannel.ack(msg) 
           }
         },{noAck : true}

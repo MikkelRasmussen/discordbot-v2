@@ -1,5 +1,5 @@
 {
-  "name": "teknikfagsBot",
+  "name": "teknikfag",
   "version": "4.0.0",
   "description": "A discord bot, that can move users! ",
   "main": "main.js",

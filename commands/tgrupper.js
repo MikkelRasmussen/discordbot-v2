@@ -1,9 +1,11 @@
-const moveerMessage = require('../moveerMessage.js')
+const CommandMessage = require('../CommandMessage.js')
 const check = require('../helpers/check.js')
 const helper = require('../helpers/helper.js')
+const log = require('../helpers/logger')
 
 async function move(args, message, rabbitMqChannel) {
   try {
+    log.info("Message recieved I tgrupper")
     const amountInEachChannel = args.pop()
     let fromVoiceChannelName = args[0]
     let categoryName = args[1]
@@ -13,12 +15,12 @@ async function move(args, message, rabbitMqChannel) {
       categoryName = names[1]
     }
 
-    await check.ifTextChannelIsMoveerAdmin(message)
-    check.argsLength(args, 2) // 2 since we use args.pop above to be able to use fnutthelper (only allows 2 args)
+    await check.ifTextChannelIsadmin(message)
+    check.argsLength(args, 2) 
     check.ifMessageContainsMentions(message)
     const fromVoiceChannel = helper.getChannelByName(message, fromVoiceChannelName)
     check.ifVoiceChannelExist(message, fromVoiceChannel, fromVoiceChannelName)
-    // check.ifUsersInsideVoiceChannel(message, fromVoiceChannelName, fromVoiceChannel) //Ignore during test
+    check.ifUsersInsideVoiceChannel(message, fromVoiceChannelName, fromVoiceChannel) 
 
     const category = helper.getCategoryByName(message, categoryName)
     const voiceChannelsInCategory = category.children
@@ -32,20 +34,19 @@ async function move(args, message, rabbitMqChannel) {
     const userIdsLength = userIdsToMove.length
     let voiceChannelCounter = 0
     for (let i = 0; i < userIdsLength; i++) {
-      if (userIdsToMove.length === 0) break // All users moved correctly, break the loop
+      if (userIdsToMove.length === 0) break 
       check.ifCatergyHasRoomsAvailable(message, voiceChannelCounter, voiceChannelsInCategory, categoryName)
       check.userAmountInChannel(message, userIdsToMove.length, amountInEachChannel, fromVoiceChannelName)
 
       const randomUsersTomove = await helper.getRandomUsers(userIdsToMove, amountInEachChannel)
-      await check.forMovePerms(message, userIdsToMove, voiceChannelsInCategory[voiceChannelCounter])
-      await check.forConnectPerms(message, userIdsToMove, voiceChannelsInCategory[voiceChannelCounter])
       if (randomUsersTomove.length > 0)
+      console.log(randomUsersTomove)
         await helper.moveUsers(
           message,
           randomUsersTomove,
           voiceChannelsInCategory[voiceChannelCounter].id,
           rabbitMqChannel,
-          'ymove'
+          'tgrupper'
         )
       for (let z = 0; z < randomUsersTomove.length; z++) {
         const index = await userIdsToMove.indexOf(randomUsersTomove[z])
@@ -53,8 +54,8 @@ async function move(args, message, rabbitMqChannel) {
       }
       voiceChannelCounter++
     }
-    moveerMessage.logger(message, 'Moved ' + userIdsLength + (userIdsLength === 1 ? ' user' : ' users'))
-    moveerMessage.sendMessage(
+    CommandMessage.logger(message, 'Moved ' + userIdsLength + (userIdsLength === 1 ? ' user' : ' users'))
+    CommandMessage.sendMessage(
       message,
       'Moved ' + userIdsLength + (userIdsLength === 1 ? ' user' : ' users') + ' by request of <@' + message.author.id + '>'
     )
@@ -62,11 +63,11 @@ async function move(args, message, rabbitMqChannel) {
     //check.checkifPatreonGuildRepeat(message)
   } catch (err) {
     if (!err.logMessage) {
-      moveerMessage.reportMoveerError('Above alert was caused by:\n' + err.stack)
+      CommandMessage.reportCommandError('Above alert was caused by:\n' + err.stack)
       console.log(err)
     }
-    moveerMessage.logger(message, err.logMessage)
-    moveerMessage.sendMessage(message, err.sendMessage)
+    CommandMessage.logger(message, err.logMessage)
+    CommandMessage.sendMessage(message, err.sendMessage)
   } 
 }
 
