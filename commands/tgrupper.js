@@ -51,13 +51,12 @@ async function move(args, message, rabbitMqChannel) {
       }
       voiceChannelCounter++
     }
-    CommandMessage.logger(message, 'Moved ' + userIdsLength + (userIdsLength === 1 ? ' user' : ' users'))
+    CommandMessage.logger(message, 'Flyttede ' + userIdsLength + (userIdsLength === 1 ? ' bruger' : ' brugere'))
     CommandMessage.sendMessage(
       message,
-      'Moved ' + userIdsLength + (userIdsLength === 1 ? ' user' : ' users') + ' by request of <@' + message.author.id + '>'
+      'Flyttede ' + userIdsLength + (userIdsLength === 1 ? 'bruger' : ' brugere') + ', anmodet af <@' + message.author.id + '>'
     )
     
-    //check.checkifPatreonGuildRepeat(message)
   } catch (err) {
     if (!err.logMessage) {
       CommandMessage.reportCommandError('Above alert was caused by:\n' + err.stack)

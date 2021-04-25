@@ -60,10 +60,10 @@ async function moveUsers(message, usersToMove, toVoiceChannelId, rabbitMqChannel
 
   CommandMessage.sendMessage(
     message,
-    'Moved ' +
+    'Flyttede ' +
       usersMoved +
-      (usersMoved === 1 ? ' user' : ' users') +
-      ' by request of <@' +
+      (usersMoved === 1 ? ' bruger' : ' brugere') +
+      ', anmodet af <@' +
       message.author.id +
       '>' +
       (ShouldISendRLMessage ? CommandMessage.TAKE_A_WHILE_RL_MESSAGE : '')
