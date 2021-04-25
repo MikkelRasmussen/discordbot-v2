@@ -38,7 +38,6 @@ async function move(args, message, rabbitMqChannel) {
 
       const randomUsersTomove = await helper.getRandomUsers(userIdsToMove, amountInEachChannel)
       if (randomUsersTomove.length > 0)
-      console.log(randomUsersTomove)
         await helper.moveUsers(
           message,
           randomUsersTomove,
