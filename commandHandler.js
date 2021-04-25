@@ -4,11 +4,7 @@ const CommandMessage = require('./CommandMessage.js')
 
 
 const handleCommand = (command, message, args, rabbitMqChannel) => {
-  //if (command === 'say') message.channel.send(args.join(' '))
-  if (command === 'changema')
-    message.channel.send(
-      'This command has moved, it is now !addma <#channel>.\nReason for this is that we now allow multiple renamed admin channels.'
-    )
+ 
   if (command === 'tgrupper') tgrupper.move(args, message, rabbitMqChannel)
   if (command === 'sgrupper') sgrupper.move(args, message, rabbitMqChannel)
   if ((command === 'help' || command === 'commands') && !message.author.bot) {
