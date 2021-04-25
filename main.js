@@ -1,5 +1,5 @@
 const Discord = require('discord.js')
-const client = new Discord.Client({})
+const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"],})
 
 const log = require('./helpers/logger')
 const amqp = require('amqplib/callback_api')
