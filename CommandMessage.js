@@ -113,7 +113,7 @@ const USER_MOVED_WITH_TEXT_CHANNEL = (textChannelId) =>
 const HELP_MESSAGE = {
   embed: {
     footer: {
-      text: 'Support server: https://discord.gg/dTdH3gD',
+      text: 'For mere hjælp, spørg en ven',
     },
     fields: [
       {
@@ -124,129 +124,17 @@ const HELP_MESSAGE = {
         name: 'sgrupper',
         value: "Moves all users inside a category's voice channels to a specific channel",
       },
-      {
-        name: 'addma',
-        value:
-          'Allows admin commands to be sent from a secondary text channel of your choice \n`!addma #<channelName>`',
-      },
-      {
-        name: 'removema',
-        value:
-          'Remove the permission of admin commands to be sent from a secondary text channel. \n`!removema #<channelName>`\n\nFor more information, use !help <command>',
-      },
     ],
   },
 }
 
-// CMOVE
-
-const HELP_CMOVE = {
-  embed: {
-    color: 2387002,
-    footer: {
-      text: 'Support server: https://discord.gg/dTdH3gD',
-    },
-    fields: [
-      {
-        name: '!cmove',
-        value:
-          "1. Create a text channel named 'admin'\n2. Tell your friends to join any voice channel.\n3. Write `!cmove <voicechannel name or id> @user1 @user2`\n \nThis command doesn't require the author to be inside a voice channel. All `!cmove` commands has to be sent inside 'admin' since this is an admin only command.\nExample usage:\n`!cmove Channel1 @Fragstealern#2543`\n`!cmove 569909202437406750 @Fragstealern#2543`\n(If your voice channel contains spaces use\n`!cmove \"channel 2\" @Fragstealern#2543`)",
-      },
-    ],
-  },
-}
-// GMOVE
-
-const HELP_GMOVE = {
-  embed: {
-    color: 2387002,
-    footer: {
-      text: 'Support server: https://discord.gg/dTdH3gD',
-    },
-    fields: [
-      {
-        name: '!gmove',
-        value:
-          "Group moving without using @tags!\n1. Create a voice channel named 'gCommand[name here]' ← Notice that there is no space between the name and 'gCommand'.\n2. Join the voice channel you want to move users to\n3. Tell your friends to join your 'gCommand' channel.\n4. Write `!gmove [name of the channel]`, do not include 'gCommand'\n\nExample: Let's say I have a 'gCommand' channel named 'gCommandIce'. The command would look like this; `!gmove Ice` and it would move the members to your voice channel.\n(If your voice channel contains spaces use \n`!gmove \"channel 1\"`)",
-      },
-    ],
-  },
-}
-// MOVE
-
-const HELP_MOVE = {
-  embed: {
-    color: 2387002,
-    footer: {
-      text: 'Support server: https://discord.gg/dTdH3gD',
-    },
-    fields: [
-      {
-        name: '!move',
-        value:
-          "1. Create a voice channel named 'Command'\n2. Join a voice channel (Not 'Command')\n3. Tell users you want to move to join the channel 'Command'\n4. Write `!move @user1 @user2`\n \nThis command also contains an admin version that requires a text channel named 'admin'. `!move` commands sent inside this channel removes the requirement of @user1 & @user2 to join the 'Command' channel.\nThe author of the command can move people from any channel to any other channel.\n ",
-      },
-    ],
-  },
-}
-// FMOVE
-
-const HELP_FMOVE = {
-  embed: {
-    color: 2387002,
-    footer: {
-      text: 'Support server: https://discord.gg/dTdH3gD',
-    },
-    fields: [
-      {
-        name: '!fmove',
-        value:
-          '1. Tell users you want to move to join voice channel A\n2. Write `!fmove A B` where B is the voice channel you want to move them\n \nThis command requires to be sent from the text channel \'admin\'.\n(If your voice channel contains spaces use\n`!fmove "channel 1" "channel 2"`)',
-      },
-    ],
-  },
-}
-// RMOVE
-
-const HELP_RMOVE = {
-  embed: {
-    color: 2387002,
-    footer: {
-      text: 'Support server: https://discord.gg/dTdH3gD',
-    },
-    fields: [
-      {
-        name: '!rmove',
-        value:
-          '1. Tell users you want to move, to join any voice channel\n2. Join any other voice channel and write `!rmove damage` where damage is the role name you want to move\n \nThis command requires to be sent from the text channel \'admin\'.\nIf your role contains spaces use\n`!rmove "super admins"`',
-      },
-    ],
-  },
-}
-// TMOVE
-
-const HELP_TMOVE = {
-  embed: {
-    color: 2387002,
-    footer: {
-      text: 'Support server: https://discord.gg/dTdH3gD',
-    },
-    fields: [
-      {
-        name: '!tmove',
-        value:
-          '1. Tell users you want to move to join any voice channel\n2. Write `!tmove channel1 damage` where damage is the role name you want to move and channel1 is the voice channel\n \nThis command requires to be sent from the text channel \'admin\'.\nIf your role contains spaces use\n`!tmove channel1 "super admins"`',
-      },
-    ],
-  },
-}
 // tgrupper
 
 const HELP_tgrupper = {
   embed: {
     color: 2387002,
     footer: {
-      text: 'Support server: https://discord.gg/dTdH3gD',
+      text: 'For mere hjælp, spørg en ven',
     },
     fields: [
       {
@@ -262,7 +150,7 @@ const HELP_sgrupper = {
   embed: {
     color: 2387002,
     footer: {
-      text: 'Support server: https://discord.gg/dTdH3gD',
+      text: 'For mere hjælp, spørg en ven',
     },
     fields: [
       {
@@ -274,84 +162,30 @@ const HELP_sgrupper = {
   },
 }
 
-const HELP_ADDMA = {
-  embed: {
-    color: 2387002,
-    footer: {
-      text: 'Support server: https://discord.gg/dTdH3gD',
-    },
-    fields: [
-      {
-        name: '!addma',
-        value:
-          '1. Write !addma #<channelName>\n2. Command should reply that admin commands are now allowed inside #<channelName>\nBe sure the actually # tagging the text channel name',
-      },
-    ],
-  },
-}
-
-const HELP_REMOVEMA = {
-  embed: {
-    color: 2387002,
-    footer: {
-      text: 'Support server: https://discord.gg/dTdH3gD',
-    },
-    fields: [
-      {
-        name: '!removema',
-        value:
-          '1. Write !removema #<channelName>\n2. Command should reply that admin commands are no longer allowed inside #<channelName>\nBe sure the actually # tagging the text channel name',
-      },
-    ],
-  },
-}
-
 const FALLBACK_HELP_MESSAGE =
   'move - Moves @mentions to you\ncmove  Moves @mentions to a specific channel\nfmove' +
   '- Moves users inside one channel to another channel\ngmove - Moves everyone inside a channel to you. \n\n' +
-  'For more information, use !help <command>\nSupport Server: <https://discord.gg/dTdH3gD>'
+  'For more information, use !help <command>'
 
-const FALLBACK_HELP_FMOVE = HELP_FMOVE.embed.fields[0].value
-const FALLBACK_HELP_CMOVE = HELP_CMOVE.embed.fields[0].value
-const FALLBACK_HELP_MOVE = HELP_MOVE.embed.fields[0].value
-const FALLBACK_HELP_GMOVE = HELP_GMOVE.embed.fields[0].value
-const FALLBACK_HELP_TMOVE = HELP_TMOVE.embed.fields[0].value
+
 const FALLBACK_HELP_tgrupper = HELP_tgrupper.embed.fields[0].value
 const FALLBACK_HELP_sgrupper = HELP_sgrupper.embed.fields[0].value
-const FALLBACK_HELP_ADDMA = HELP_ADDMA.embed.fields[0].value
-const FALLBACK_HELP_REMOVEMA = HELP_REMOVEMA.embed.fields[0].value
-const FALLBACK_HELP_RMOVE = HELP_RMOVE.embed.fields[0].value
+
+
 
 const handleHelpCommand = (helpCommand, gotEmbedPerms) => {
   switch (helpCommand) {
-    case 'cmove':
-      return gotEmbedPerms ? HELP_CMOVE : FALLBACK_HELP_CMOVE
-    case 'rmove':
-      return gotEmbedPerms ? HELP_RMOVE : FALLBACK_HELP_RMOVE
-    case 'fmove':
-      return gotEmbedPerms ? HELP_FMOVE : FALLBACK_HELP_FMOVE
-    case 'move':
-      return gotEmbedPerms ? HELP_MOVE : FALLBACK_HELP_MOVE
-    case 'gmove':
-      return gotEmbedPerms ? HELP_GMOVE : FALLBACK_HELP_GMOVE
     case 'tgrupper':
       return gotEmbedPerms ? HELP_tgrupper : FALLBACK_HELP_tgrupper
     case 'sgrupper':
       return gotEmbedPerms ? HELP_sgrupper : FALLBACK_HELP_sgrupper
-    case 'tmove':
-      return gotEmbedPerms ? HELP_TMOVE : FALLBACK_HELP_TMOVE
-    case 'addma':
-      return gotEmbedPerms ? HELP_ADDMA : FALLBACK_HELP_ADDMA
-    case 'removema':
-      return gotEmbedPerms ? HELP_REMOVEMA : FALLBACK_HELP_REMOVEMA
     default:
       return 'notFound'
   }
 }
 
 function sendMessage(message, sendMessage) {
-  if (sendMessage === 'notFound') return // Ignore this. failed to find HELP message by args
-  // eslint-disable-next-line eqeqeq
+  if (sendMessage === 'notFound') return 
   if (sendMessage == null) {
     reportCommandError('I was about to send a NULL message - Probably errors in code.. @everyone')
     return

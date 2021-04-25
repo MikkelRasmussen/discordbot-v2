@@ -1,11 +1,9 @@
 const CommandMessage = require('../CommandMessage.js')
 const check = require('../helpers/check.js')
 const helper = require('../helpers/helper.js')
-const log = require('../helpers/logger')
 
 async function move(args, message, rabbitMqChannel) {
   try {
-    log.info("Message recieved I tgrupper")
     const amountInEachChannel = args.pop()
     let fromVoiceChannelName = args[0]
     let categoryName = args[1]
