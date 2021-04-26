@@ -119,9 +119,9 @@ const HELP_MESSAGE = {
         color: 2387002,
         fields: [
           {
-            name: '!TGrupper',
+            name: 'TGrupper',
             value:
-              'Vælg kanal der skal flyttes fra "klasselokale"\n2. Opret grupperums kanal under kategorien "gruppearbejde"\n3. Skriv !TGrupper "klasselokale" "grupperarbejde" 3`\n4. Nu fordeler botten alle fra "klasselokale" over til forskellige kanaler i kategorien "grupperarbejde". med 3 elever i hver gruppe.  \n Kommandoen skal kaldes i tekst kanalen \'admin\'',
+              '\n1. Vælg kanal der skal flyttes fra "klasselokale"\n2. Opret grupperums kanal under kategorien "gruppearbejde"\n3. Skriv !TGrupper "klasselokale" "grupperarbejde" 3`\n4. Nu fordeler botten alle fra "klasselokale" over til forskellige kanaler i kategorien "grupperarbejde". med 3 elever i hver gruppe.  \n Kommandoen skal kaldes i tekst kanalen \'admin\'',
           },
         ],
       },
