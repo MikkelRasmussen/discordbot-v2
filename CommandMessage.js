@@ -60,6 +60,24 @@ const Command_MISSING_MOVE_PERMISSION = (userId, voiceChannelName) =>
 const TAKE_A_WHILE_RL_MESSAGE =
   '\n\n Det her kan godt tage lidt tid'
 
+  function sendMessage(message, sendMessage) {
+    if (sendMessage === 'notFound') return // Ignore this. failed to find HELP message by args
+    // eslint-disable-next-line eqeqeq
+    if (sendMessage == null) {
+      reportMoveerError('I was about to send a NULL message - Probably errors in code.. @everyone')
+      return
+    }
+  
+    message.channel.send(sendMessage).catch((e) => {
+      logger(message, e)
+      if (
+        config.discordBotListToken !== 'x' &&
+        message.channel.permissionsFor(message.guild.me).has('SEND_MESSAGES') === true
+      ) {
+        console.log(e)
+      }
+    })
+  }
 
 
 function logger(message, logMessage) {
@@ -85,6 +103,59 @@ function reportCommandError(message) {
   hook.send(message)
 }
 
+const HELP_MESSAGE = {
+  embed: {
+    fields: [
+      { name: 'TGrupper -> !guide TGrupper',
+      value: 'Fordeler alle i en kanal ud i små grupperum i den valgte kanalkategori',
+    },
+    {
+      name: 'SGrupper -> !guide SGrupper',
+      value: "Flytter alle fra en kanalkategori, tilbage til den valgte talekanal",
+    },
+    ]}}
+    const HELP_tgrupper = {
+      embed: {
+        color: 2387002,
+        fields: [
+          {
+            name: '!TGrupper',
+            value:
+              'Vælg kanal der skal flyttes fra "klasselokale"\n2. Opret grupperums kanal under kategorien "gruppearbejde"\n3. Skriv !TGrupper "klasselokale" "grupperarbejde" 3`\n4. Nu fordeler botten alle fra "klasselokale" over til forskellige kanaler i kategorien "grupperarbejde". med 3 elever i hver gruppe.  \n Kommandoen skal kaldes i tekst kanalen \'admin\'',
+          },
+        ],
+      },
+    }
+    
+    const HELP_sgrupper = {
+      embed: {
+        color: 2387002,
+        fields: [
+          {
+            name: 'SGrupper',
+            value:
+              'Bruges efter !TGrupper, da denne funktion kan samle alle grupperum tilbage til klasselokalet\n1. skriv !SGrupper "gruppearbejde" "klasselokalet"\n2. Botten flytter alle fra kategorien "gruppearbejde" over til talekanalen "klasselokalet". \nKommandoen skal kaldes i tekst kanalen \'admin\'',
+          },
+        ],
+      },
+    }
+
+
+
+const FALLBACK_HELP_tgrupper = HELP_tgrupper.embed.fields[0].value
+const FALLBACK_HELP_sgrupper = HELP_sgrupper.embed.fields[0].value
+
+const handleHelpCommand = (helpCommand, gotEmbedPerms) => {
+  switch (helpCommand) {
+    case 'TGrupper':
+      return gotEmbedPerms ? HELP_tgrupper : FALLBACK_HELP_tgrupper
+    case 'SGrupper':
+      return gotEmbedPerms ? HELP_sgrupper : FALLBACK_HELP_sgrupper
+      default:
+        return 'notFound'
+    }}
+
+
 module.exports = {
   USER_NOT_IN_ANY_VOICE_CHANNEL,
   Command_MISSING_CONNECT_PERMISSION,
@@ -96,5 +167,7 @@ module.exports = {
   NOT_ENOUGH_VCHANNELS_IN_CATEGORY,
   NO_EMTPY_VOICECHANNELS_IN_CATEGORY,
   NO_USER_FOUND_BY_SEARCH,
-
+  handleHelpCommand,
+  HELP_MESSAGE,
+  sendMessage,
 }
